@@ -1,0 +1,6 @@
+streamlit
+nbformat
+nbconvert
+openai
+faiss-cpu
+langchain
