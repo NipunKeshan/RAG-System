@@ -6,9 +6,9 @@ faiss-cpu
 langchain
 requests
 PyPDF2
-numpy==1.21.6
+numpy
 pandas
-chromadb==0.2.0
+chromadb
 onnxruntime
 tqdm
 langchain-chroma
