@@ -6,7 +6,7 @@ faiss-cpu
 langchain
 requests
 PyPDF2
-numpy
+numpy==1.21.6
 pandas
 chromadb==0.2.0
 onnxruntime
