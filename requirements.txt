@@ -5,11 +5,10 @@ openai
 faiss-cpu
 langchain
 requests
-streamlit
 PyPDF2
 numpy
 pandas
-chromadb==0.1.0  
+chromadb==0.1.0
 onnxruntime
 tqdm
 langchain-chroma
@@ -18,13 +17,5 @@ flatbuffers
 protobuf
 sympy
 deprecated
-importlib-metadata
-googleapis-common-protos
-beautifulsoup4
-faiss-cpu
-langchain_community
-langchain-ollama
-langchain-text-splitters
 python-dotenv
 PyMuPDF
-
