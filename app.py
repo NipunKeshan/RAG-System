@@ -1,0 +1,119 @@
+import streamlit as st
+import uuid
+import nbformat
+from nbconvert import PythonExporter
+
+# Function to load the Jupyter notebook and convert it to Python code
+def load_notebook(notebook_path):
+    with open(notebook_path, 'r', encoding='utf-8') as f:
+        notebook_content = nbformat.read(f, as_version=4)
+    
+    # Convert notebook content to Python code
+    python_exporter = PythonExporter()
+    python_code, _ = python_exporter.from_notebook_node(notebook_content)
+    
+    return python_code
+
+# Function to execute Python code dynamically in Streamlit
+def execute_notebook_code(python_code):
+    exec(python_code, globals())
+
+# Function to generate answers from your existing RAG system
+def get_answer_from_rag(user_query):
+    # Call your existing RAG system's logic (from the loaded notebook or custom function)
+    response = conversational_rag_chain.invoke(
+        {"input": user_query}
+    )
+    return response.get("answer", "Sorry, I couldn't get an answer.")
+
+# Streamlit interface
+st.title("Conversational RAG System")
+st.write("This interface runs a simple RAG system based on your existing notebook!")
+
+# Path to the notebook (adjust as necessary)
+notebook_path = './Test_conversational_RAG.ipynb'
+
+# Load and execute code from the notebook (if needed)
+python_code = load_notebook(notebook_path)
+execute_notebook_code(python_code)
+
+# Session state to store conversation history
+if 'session_id' not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())  # New session ID
+    st.session_state.chat_history = []
+    st.session_state.name = None
+    st.session_state.hobby = None
+    st.session_state.submitted = False
+
+# Get user name and hobby if session is new
+if not st.session_state.submitted:
+    st.session_state.name = st.text_input("Enter your name:")
+    st.session_state.hobby = st.text_input("Enter your hobby:")
+
+    # Display the submit button initially
+    submit_button = st.button("Submit")
+
+    # Only process after both name and hobby are entered and submit button is clicked
+    if submit_button and st.session_state.name and st.session_state.hobby:
+        # After getting name and hobby, prompt RAG system
+        initial_prompt = f"My name is {st.session_state.name} and my Hobby is {st.session_state.hobby}. And I ask some question from you and reply me using the Socratic method. Also give me the answers in user preferences related to my name and hobby."
+        
+        # Show the success message right after submit is clicked
+        st.success("Your name and hobby successfully submitted, please wait until AI responds.")
+        
+        # Simulate a waiting time while the system processes the request
+        with st.spinner("Processing your request... please wait"):
+            response = get_answer_from_rag(initial_prompt)
+        
+        # Append response to the chat history after receiving it
+        st.session_state.chat_history.append(("AI", response))
+
+        # Mark the form as submitted and proceed to question input
+        st.session_state.submitted = True
+
+        # Display the question input field for continuous conversation
+        user_query = st.text_input("Ask a question:")
+
+        # Add a submit button for the question input
+        question_submit_button = st.button("Submit Question")
+
+        if question_submit_button and user_query:
+            # Show the success message for question submission
+            st.success("Your question successfully submitted, please wait until AI responds.")
+            
+            # Simulate a waiting time while the system processes the question
+            with st.spinner("Processing your question... please wait"):
+                # Get answer from RAG system
+                answer = get_answer_from_rag(user_query)
+                st.session_state.chat_history.append(("User", user_query))
+                st.session_state.chat_history.append(("AI", answer))
+
+            # Display chat history
+            st.write("**Chat History**:")
+            for speaker, message in st.session_state.chat_history:
+                st.write(f"{speaker}: {message}")
+    else:
+        # Display message until user fills in name and hobby
+        st.write("Please enter your name and hobby to start the conversation.")
+else:
+    # If name and hobby were submitted, show the question input field
+    user_query = st.text_input("Ask a question:")
+
+    # Add a submit button for the question input
+    question_submit_button = st.button("Submit Question")
+
+    if question_submit_button and user_query:
+        # Show the success message for question submission
+        st.success("Your question successfully submitted, please wait until AI responds.")
+        
+        # Simulate a waiting time while the system processes the question
+        with st.spinner("Processing your question... please wait"):
+            # Get answer from RAG system
+            answer = get_answer_from_rag(user_query)
+            st.session_state.chat_history.append(("User", user_query))
+            st.session_state.chat_history.append(("AI", answer))
+
+        # Display chat history
+        st.write("**Chat History**:")
+        for speaker, message in st.session_state.chat_history:
+            st.write(f"{speaker}: {message}")
