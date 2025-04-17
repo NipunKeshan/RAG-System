@@ -20,3 +20,4 @@ deprecated
 python-dotenv
 PyMuPDF
 langchain-openai
+langchain-ollama
