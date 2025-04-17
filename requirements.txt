@@ -6,6 +6,7 @@ faiss-cpu
 langchain
 requests
 PyPDF2
+langchain-community
 numpy
 pandas
 onnxruntime
