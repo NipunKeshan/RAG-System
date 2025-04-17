@@ -19,3 +19,4 @@ sympy
 deprecated
 python-dotenv
 PyMuPDF
+langchain-openai
