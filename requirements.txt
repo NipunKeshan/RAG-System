@@ -8,7 +8,6 @@ requests
 PyPDF2
 numpy
 pandas
-chromadb
 onnxruntime
 tqdm
 langchain-chroma
